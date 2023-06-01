@@ -1,30 +1,61 @@
 <script setup lang="ts">
-import { useToggle } from '@vueuse/core'
 import 'uno.css'
 
-const [show, toggle] = useToggle(false)
+import { onMessage, sendMessage } from 'webext-bridge/content-script'
+
+const clickCount = ref(1)
+const doContentScriptToBackground = async () => {
+  const rz = await sendMessage('content-scipt=>background', {
+    count: clickCount.value,
+  }, 'background')
+  clickCount.value++
+  // eslint-disable-next-line no-console
+
+  console.log('====> doContentScriptToBackground sendMessage rz :', rz)
+}
+
+onMessage('content-scipt<=background', async (msg) => {
+  // eslint-disable-next-line no-console
+  console.log('====> content-scipt<=background msg :', msg)
+  return { cool: 'Got you! I am cool from content-script' }
+})
+
+const doContentScriptToPopup = async () => {
+  const rz = await sendMessage('content-scipt=>popup', {
+    count: clickCount.value,
+  }, 'popup')
+  clickCount.value++
+  // eslint-disable-next-line no-console
+  console.log('====> doContentScriptToPopup sendMessage rz :', rz)
+}
+
+onMessage('content-scipt<=popup', async (msg) => {
+  // eslint-disable-next-line no-console
+  console.log('====> content-scipt<=popup msg :', msg)
+  return { cool: 'Got you popup! I am cool from content-script' }
+})
 </script>
 
 <template>
-  <div class="fixed right-0 bottom-0 m-5 z-100 flex items-end font-sans select-none leading-1em">
+  <div class="flex font-sans m-5 top-0 left-0 leading-1em z-100 fixed items-end select-none">
     <div
-      class="bg-white text-gray-800 rounded-lg shadow w-max h-min"
+      class="bg-white rounded-lg h-min shadow w-max text-gray-800"
       p="x-4 y-2"
       m="y-auto r-2"
       transition="opacity duration-300"
-      :class="show ? 'opacity-100' : 'opacity-0'"
     >
       <h1 class="text-lg">
-        Vitesse WebExt
+        Vitesse WebExt {{ clickCount }}
       </h1>
       <SharedSubtitle />
+      <button @click="doContentScriptToBackground">
+        content-scipt=>background
+      </button>
+      <br>
+      <br>
+      <button @click="doContentScriptToPopup">
+        content-scipt=>popup
+      </button>
     </div>
-    <button
-      class="flex w-10 h-10 rounded-full shadow cursor-pointer border-none"
-      bg="teal-600 hover:teal-700"
-      @click="toggle()"
-    >
-      <pixelarticons-power class="block m-auto text-white text-lg" />
-    </button>
   </div>
 </template>
