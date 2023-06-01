@@ -1,6 +1,6 @@
 {
-  "name": "vitesse-webext",
-  "displayName": "Vitesse WebExt",
+  "name": "vitesse-webext-tutorial",
+  "displayName": "Vitesse WebExt Tutorial",
   "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@8.3.1",
