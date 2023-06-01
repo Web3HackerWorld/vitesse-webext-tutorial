@@ -52,3 +52,12 @@ onMessage('get-current-tab', async () => {
     }
   }
 })
+
+onMessage('content-scipt=>background', async (msg) => {
+  // eslint-disable-next-line no-console
+  console.log('====> msg :', msg)
+  const keys = Object.keys(msg)
+  const { sender, data } = msg
+  // eslint-disable-next-line no-console
+  console.log('====> keys, sender, data :', keys, sender, data)
+})
