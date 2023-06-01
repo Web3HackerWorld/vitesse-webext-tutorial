@@ -1,15 +1,24 @@
 <script setup lang="ts">
 import 'uno.css'
 
-import { sendMessage } from 'webext-bridge/content-script'
+import { onMessage, sendMessage } from 'webext-bridge/content-script'
 
 const clickCount = ref(1)
 const doContentScriptToBackground = async () => {
-  await sendMessage('content-scipt=>background', {
+  const rz = await sendMessage('content-scipt=>background', {
     count: clickCount.value,
   }, 'background')
   clickCount.value++
+  // eslint-disable-next-line no-console
+
+  console.log('====> doContentScriptToBackground sendMessage rz :', rz)
 }
+
+onMessage('content-scipt<=background', async (msg) => {
+  // eslint-disable-next-line no-console
+  console.log('====> content-scipt<=background msg :', msg)
+  return { cool: 'Got you! I am cool from content-script' }
+})
 </script>
 
 <template>
