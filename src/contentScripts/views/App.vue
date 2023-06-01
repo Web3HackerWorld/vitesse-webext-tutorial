@@ -19,6 +19,21 @@ onMessage('content-scipt<=background', async (msg) => {
   console.log('====> content-scipt<=background msg :', msg)
   return { cool: 'Got you! I am cool from content-script' }
 })
+
+const doContentScriptToPopup = async () => {
+  const rz = await sendMessage('content-scipt=>popup', {
+    count: clickCount.value,
+  }, 'popup')
+  clickCount.value++
+  // eslint-disable-next-line no-console
+  console.log('====> doContentScriptToPopup sendMessage rz :', rz)
+}
+
+onMessage('content-scipt<=popup', async (msg) => {
+  // eslint-disable-next-line no-console
+  console.log('====> content-scipt<=popup msg :', msg)
+  return { cool: 'Got you popup! I am cool from content-script' }
+})
 </script>
 
 <template>
@@ -30,11 +45,16 @@ onMessage('content-scipt<=background', async (msg) => {
       transition="opacity duration-300"
     >
       <h1 class="text-lg">
-        Vitesse WebExt
+        Vitesse WebExt {{ clickCount }}
       </h1>
       <SharedSubtitle />
       <button @click="doContentScriptToBackground">
         content-scipt=>background
+      </button>
+      <br>
+      <br>
+      <button @click="doContentScriptToPopup">
+        content-scipt=>popup
       </button>
     </div>
   </div>
