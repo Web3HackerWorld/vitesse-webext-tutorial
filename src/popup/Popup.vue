@@ -22,6 +22,21 @@ const sendMessageToContentScript = async () => {
   // eslint-disable-next-line no-console
   console.log('====> response from content-sciript', rz)
 }
+
+onMessage('background=>popup', async (msg) => {
+  // eslint-disable-next-line no-console
+  console.log('====> background=>popup msg :', msg)
+  count.value = msg.data.count
+  return { cool: 'Got you! I am cool from popup' }
+})
+
+const sendMessageToBackground = async () => {
+  const rz = await sendMessage('background<=popup', {
+    time: new Date(),
+  }, 'background')
+  // eslint-disable-next-line no-console
+  console.log('====> response from background', rz)
+}
 </script>
 
 <template>
@@ -29,11 +44,18 @@ const sendMessageToContentScript = async () => {
     <Logo />
     <div>Popup</div>
     <SharedSubtitle />
-    currentTabId {{ currentTabId }} <br >
+    currentTabId {{ currentTabId }} <br>
     count from content-script: {{ count }}
     <button class="mt-2 btn" @click="sendMessageToContentScript">
       content-scipt&lt;= popup
     </button>
+    <br>
+    <br>
+    <button class="mt-2 btn" @click="sendMessageToBackground">
+      background&lt;= popup
+    </button>
+    <br>
+    <br>
     <button class="mt-2 btn" @click="openOptionsPage">
       Open Options
     </button>

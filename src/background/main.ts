@@ -36,3 +36,20 @@ onMessage('content-scipt=>background', async (msg) => {
 
   return { yaha: 'hoho' }
 })
+
+onMessage('background<=popup', async (msg) => {
+  // eslint-disable-next-line no-console
+  console.log('====> msg :', msg)
+  const keys = Object.keys(msg)
+  const { sender, data } = msg
+  // eslint-disable-next-line no-console
+  console.log('====> keys, sender, data :', keys, sender, data)
+
+  const rz = await sendMessage('background=>popup', {
+    time: new Date(),
+  }, 'popup')
+  // eslint-disable-next-line no-console
+  console.log('====> response from popup', rz)
+
+  return { yoho: 'huhu' }
+})
